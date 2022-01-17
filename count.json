@@ -1,0 +1,32 @@
+{
+    "1": {
+        "count": "0",
+        "count_menu_ticket": "0"
+    },
+    "400505382": {
+        "count": "2",
+        "count_menu": "0"
+    },
+    "2024579148": {
+        "count": "5",
+        "count_menu": "0"
+    },
+    "1939624252": {
+        "count": "0",
+        "count_menu_ticket": "0",
+        "count_menu_burger": "0",
+        "count_menu_pizza": "0",
+        "count_menu_sushi": "0",
+        "count_menu_napitki": "0",
+        "count_tickets_menu_st": "1"
+    },
+    "432287920": {
+        "count": "0",
+        "count_menu_ticket": "0",
+        "count_menu_burger": "0",
+        "count_menu_pizza": "0",
+        "count_menu_sushi": "0",
+        "count_menu_napitki": "0",
+        "count_tickets_menu_st": "0"
+    }
+}
