@@ -56,12 +56,12 @@ def get_format_args(sql, parameters: dict):
 ####################################################################################################
 ########################################### ЗАПРОСЫ К БД ###########################################
 # Добавление пользователя
-def add_userx(user_id, user_login, user_name, balance, all_refill, reg_date):
+def add_userx(user_id, user_login, user_name, balance, all_refill, reg_date, qr_code):
     with sqlite3.connect(path_to_db) as db:
         db.execute("INSERT INTO storage_users "
-                   "(user_id, user_login, user_name, balance, all_refill, reg_date) "
-                   "VALUES (?, ?, ?, ?, ?, ?)",
-                   [user_id, user_login, user_name, balance, all_refill, reg_date])
+                   "(user_id, user_login, user_name, balance, all_refill, reg_date, qr_code, card) "
+                   "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   [user_id, user_login, user_name, balance, all_refill, reg_date, qr_code, "0"])
         db.commit()
 
 
@@ -393,10 +393,13 @@ def buy_itemx(get_items, get_count):
         for select_send_item in get_items:
             if send_count != get_count:
                 send_count += 1
-                save_items.append(f"{send_count}. <code>{select_send_item[2]}</code>")
-                sql, parameters = get_format_args("DELETE FROM storage_item WHERE ", {"item_id": select_send_item[1]})
+                save_items.append(
+                    f"{send_count}. <code>{select_send_item[2]}</code>")
+                sql, parameters = get_format_args("DELETE FROM storage_item WHERE ", {
+                                                  "item_id": select_send_item[1]})
                 db.execute(sql, parameters)
-                split_len = len(f"{send_count}. <code>{select_send_item[2]}</code>")
+                split_len = len(
+                    f"{send_count}. <code>{select_send_item[2]}</code>")
             else:
                 break
         db.commit()

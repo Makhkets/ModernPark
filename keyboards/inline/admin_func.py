@@ -10,7 +10,7 @@ def search_profile_func(user_id):
     user_purchases_kb = InlineKeyboardButton(text="🛒 Покупки", callback_data=f"show_purchases:{user_id}")
     add_balance_kb = InlineKeyboardButton(text="💴 Выдать баланс", callback_data=f"add_balance:{user_id}")
     set_balance_kb = InlineKeyboardButton(text="💸 Изменить баланс", callback_data=f"set_balance:{user_id}")
-    send_msg_kb = InlineKeyboardButton(text="💌 Отправить СМС", callback_data=f"send_message:{user_id}")
+    send_msg_kb = InlineKeyboardButton(text="✉ Отправить СМС", callback_data=f"send_message:{user_id}")
     search_profile.add(add_balance_kb, set_balance_kb)
     search_profile.add(user_purchases_kb, send_msg_kb)
     return search_profile

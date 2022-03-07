@@ -43,7 +43,7 @@ admin_id = config["settings"]["admin_cafe"]
 
 
 def split_messages(get_list, count):
-    return [get_list[i: i + count] for i in range(0, len(get_list), count)]
+    return [get_list[i : i + count] for i in range(0, len(get_list), count)]
 
 
 ######################################################################################################################
@@ -1011,8 +1011,7 @@ async def open_category_for_buy_item(call: CallbackQuery, state: FSMContext):
 
         count = int(data[user_id_menu]["count_menu_ticket"])
 
-        position_ids_ticket = ["692734953",
-                               "536244465", "865769734", "915515566"]
+        position_ids_ticket = ["692734953", "536244465", "865769734", "915515566"]
 
         position_id = position_ids_ticket[count]
         remover = 0
@@ -1073,8 +1072,7 @@ async def open_category_for_buy_item(call: CallbackQuery, state: FSMContext):
 
         count = int(data[user_id_menu]["count_menu_ticket"])
 
-        position_ids_ticket = ["692734953",
-                               "536244465", "865769734", "915515566"]
+        position_ids_ticket = ["692734953", "536244465", "865769734", "915515566"]
 
         position_id = position_ids_ticket[count]
         remover = 0
@@ -1289,8 +1287,7 @@ async def show_my_deals(message: types.Message, state: FSMContext):
             "{username}", f"<b>{message.from_user.username}</b>"
         )
     if "{user_id}" in send_msg:
-        send_msg = send_msg.replace(
-            "{user_id}", f"<b>{message.from_user.id}</b>")
+        send_msg = send_msg.replace("{user_id}", f"<b>{message.from_user.id}</b>")
     if "{firstname}" in send_msg:
         send_msg = send_msg.replace(
             "{firstname}", f"<b>{clear_firstname(message.from_user.first_name)}</b>"
@@ -1355,62 +1352,52 @@ async def show_referral(call: CallbackQuery, state: FSMContext):
         # Инлайн клавиатура
         inlineh1 = InlineKeyboardMarkup()
         inlineh1.add(
-            InlineKeyboardButton("🟢  Активировать билет 1",
-                                 callback_data="one1")
+            InlineKeyboardButton("🟢  Активировать билет 1", callback_data="one1")
         )
 
         inlineh2 = InlineKeyboardMarkup()
         inlineh2.add(
-            InlineKeyboardButton("🟢  Активировать билет 2",
-                                 callback_data="one2")
+            InlineKeyboardButton("🟢  Активировать билет 2", callback_data="one2")
         )
 
         inlineh3 = InlineKeyboardMarkup()
         inlineh3.add(
-            InlineKeyboardButton("🟢  Активировать билет 3",
-                                 callback_data="one3")
+            InlineKeyboardButton("🟢  Активировать билет 3", callback_data="one3")
         )
 
         inlineh4 = InlineKeyboardMarkup()
         inlineh4.add(
-            InlineKeyboardButton("🟢  Активировать билет 4",
-                                 callback_data="one4")
+            InlineKeyboardButton("🟢  Активировать билет 4", callback_data="one4")
         )
 
         inlineh5 = InlineKeyboardMarkup()
         inlineh5.add(
-            InlineKeyboardButton("🟢  Активировать билет 5",
-                                 callback_data="one5")
+            InlineKeyboardButton("🟢  Активировать билет 5", callback_data="one5")
         )
 
         inlineh6 = InlineKeyboardMarkup()
         inlineh6.add(
-            InlineKeyboardButton("🟢  Активировать билет 6",
-                                 callback_data="one6")
+            InlineKeyboardButton("🟢  Активировать билет 6", callback_data="one6")
         )
 
         inlineh7 = InlineKeyboardMarkup()
         inlineh7.add(
-            InlineKeyboardButton("🟢  Активировать билет 7",
-                                 callback_data="one7")
+            InlineKeyboardButton("🟢  Активировать билет 7", callback_data="one7")
         )
 
         inlineh8 = InlineKeyboardMarkup()
         inlineh8.add(
-            InlineKeyboardButton("🟢  Активировать билет 8",
-                                 callback_data="one8")
+            InlineKeyboardButton("🟢  Активировать билет 8", callback_data="one8")
         )
 
         inlineh9 = InlineKeyboardMarkup()
         inlineh9.add(
-            InlineKeyboardButton("🟢  Активировать билет 9",
-                                 callback_data="one9")
+            InlineKeyboardButton("🟢  Активировать билет 9", callback_data="one9")
         )
 
         inlineh10 = InlineKeyboardMarkup()
         inlineh10.add(
-            InlineKeyboardButton(
-                "🟢  Активировать билет 10", callback_data="one10")
+            InlineKeyboardButton("🟢  Активировать билет 10", callback_data="one10")
         )
 
         global productsz
@@ -1635,6 +1622,30 @@ async def callbackone(callback_query: types.CallbackQuery):
     await bot.send_message(user_id, "Действие выполнено")
 
 
+### ########### ##
+### bonus_card  ##
+### ########### ##
+
+
+@dp.callback_query_handler(text_startswith="bonus_card", state="*")
+async def open_category_for_buy_item(call: CallbackQuery, state: FSMContext):
+    with sqlite3.connect(path_to_db) as db:
+
+        logger.success(f"{call.from_user.username}")
+        args = db.execute(
+            f"SELECT * FROM storage_users WHERE user_id = {call.from_user.id} "
+        ).fetchall()
+
+    args = args[0][7]
+
+    await bot.send_photo(
+        call.from_user.id,
+        open(f"qrcode/{args}.png", "rb"),
+        caption=get_user_qrcode_profile(call.from_user.id),
+        reply_markup=open_profile_inl,
+    )
+
+
 ################################################################################################
 ######################################### ПОКУПКА ТОВАРА #######################################
 # Открытие категории для покупки
@@ -1769,8 +1780,7 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
 
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=menu_ticketov(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=menu_ticketov(position_id, remover, category_id)
             )
 
     elif "Бронирование" in get_category[2]:
@@ -1794,14 +1804,12 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
                 await call.message.answer_video(
                     video,
                     caption=send_msg,
-                    reply_markup=open_item_func(
-                        position_id, remover, category_id),
+                    reply_markup=open_item_func(position_id, remover, category_id),
                 )
 
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=open_item_func(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=open_item_func(position_id, remover, category_id)
             )
 
     else:
@@ -1825,8 +1833,7 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=open_item_func(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=open_item_func(position_id, remover, category_id)
             )
 
 
@@ -1877,8 +1884,7 @@ async def opens_categorysfor_buy_item(call: CallbackQuery, state: FSMContext):
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=menu_ticketov(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=menu_ticketov(position_id, remover, category_id)
             )
 
         counts_sdadsadas = int(count_js_menu_tickets) + 1
@@ -1955,8 +1961,7 @@ async def opens_categorysfor_buy_item(call: CallbackQuery, state: FSMContext):
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=menu_ticketov(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=menu_ticketov(position_id, remover, category_id)
             )
 
         counts_sdadsadas = int(count_js_menu_tickets) + 1
@@ -2022,8 +2027,7 @@ async def opens_categorysfor_buy_item(call: CallbackQuery, state: FSMContext):
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=menu_ticketov(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=menu_ticketov(position_id, remover, category_id)
             )
 
         counts_sdadsadas = int(count_js_menu_tickets) - 1
@@ -2100,8 +2104,7 @@ async def opens_categorysfor_buy_item(call: CallbackQuery, state: FSMContext):
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=menu_ticketov(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=menu_ticketov(position_id, remover, category_id)
             )
 
         counts_sdadsadas = int(count_js_menu_tickets) + 1
@@ -2164,6 +2167,7 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
 
 
 # Принятие кол-ва товаров для покупки
+
 
 @dp.message_handler(state=StorageUsers.here_input_count_buy_item)
 async def input_buy_count_item(message: types.Message, state: FSMContext):
@@ -2334,9 +2338,20 @@ async def yes_buy_this_item(call: CallbackQuery, state: FSMContext):
                 f"📦 Куплено товаров: <code>{get_count}</code>\n"
                 f"💵 Сумма покупки: <code>{amount_pay}руб</code>\n"
                 f"👤 Покупатель: <a href='tg://user?id={get_user[1]}'>{get_user[3]}</a> <code>({get_user[1]})</code>\n"
-                f"🕜 Дата покупки: <code>{buy_time}</code>",
+                f"🕜 Дата покупки: <code>{buy_time}</code>"
+                f"💳 Сумма которая уйдет на бонусную карту: <code>{amount_pay // 100 * 5}</code>",
                 reply_markup=check_user_out_func(call.from_user.id),
             )
+
+            with sqlite3.connect(path_to_db) as db:
+                x = db.execute(
+                    f"SELECT card FROM storage_users WHERE user_id = {call.from_user.id}"
+                ).fetchone()
+                print(f"x raven: {x}")
+                result = int(x[0]) + (amount_pay // 100 * 5)
+                db.execute(
+                    f"UPDATE storage_users SET card = {str(result)} WHERE user_id = {call.from_user.id}"
+                )
 
             chat_id_org = config["settings"]["admin_cafe"]
             bot_tok = config["settings"]["token"]
@@ -2485,9 +2500,7 @@ async def show_search(message: types.Message, state: FSMContext):
 @dp.message_handler(text="💰 Доплата наличными", state="*")
 async def showasdf_searcsdh(message: types.Message, state: FSMContext):
     await message.answer("<b>Введите сумму которую хотите обналичить со счета</b>")
-
     await StorageQiwi.balance_input_minus.set()
-    state.fi
 
 
 @dp.message_handler(state=StorageQiwi.balance_input_minus)
@@ -2509,6 +2522,7 @@ async def show_search(message: types.Message, state: FSMContext):
 async def show_search(message: types.Message, state: FSMContext):
     check_pass = False
     get_payment = get_paymentx()
+    logger.success(get_payment)
     if get_payment[5] == "True":
         if (
             get_payment[0] != "None"
@@ -2692,8 +2706,7 @@ async def process_successful_payment(message: types.Message):
     print([PRICE])
     update_userx(
         message.chat.id,
-        balance=int(get_user[4]) +
-        message.successful_payment.total_amount // 100,
+        balance=int(get_user[4]) + message.successful_payment.total_amount // 100,
     )
 
     await message.answer("Успешно выдан баланс")
@@ -2751,8 +2764,7 @@ async def gewtdat_id3212(message: types.Message, state: FSMContext):
         items_list = []
 
         for i in get_items:
-            items_dict[i[2]] = {"position_id": int(
-                i[1]), "category_id": int(i[7])}
+            items_dict[i[2]] = {"position_id": int(i[1]), "category_id": int(i[7])}
 
         for i in get_items:
             items_list.append(i[2])
@@ -2808,8 +2820,7 @@ async def gewtdat_id3212(message: types.Message, state: FSMContext):
             else:
                 await message.edit_text(
                     send_msg,
-                    reply_markup=open_item_func(
-                        position_id, remover, category_id),
+                    reply_markup=open_item_func(position_id, remover, category_id),
                 )
 
             data[id_user] = {"count": "0", "count_menu": str(count)}
@@ -2826,8 +2837,7 @@ async def gewtdat_id3212(message: types.Message, state: FSMContext):
             json.dump(x, f, indent=4, ensure_ascii=False)
 
         for i in get_items:
-            items_dict[i[2]] = {"position_id": int(
-                i[1]), "category_id": int(i[7])}
+            items_dict[i[2]] = {"position_id": int(i[1]), "category_id": int(i[7])}
 
         for i in get_items:
             items_list.append(i[2])
@@ -2876,14 +2886,12 @@ async def gewtdat_id3212(message: types.Message, state: FSMContext):
                 await message.answer_photo(
                     get_position[5],
                     send_msg,
-                    reply_markup=open_item_func(
-                        position_id, remover, category_id),
+                    reply_markup=open_item_func(position_id, remover, category_id),
                 )
             else:
                 await message.edit_text(
                     send_msg,
-                    reply_markup=open_item_func(
-                        position_id, remover, category_id),
+                    reply_markup=open_item_func(position_id, remover, category_id),
                 )
 
             data[id_user] = {"count": "0", "count_menu": str(count)}
@@ -2958,8 +2966,7 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=open_item_func(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=open_item_func(position_id, remover, category_id)
             )
 
         count += 1
@@ -3049,8 +3056,7 @@ async def open_category_for_create_position(call: CallbackQuery, state: FSMConte
             )
         else:
             await call.message.edit_text(
-                send_msg, reply_markup=open_item_func(
-                    position_id, remover, category_id)
+                send_msg, reply_markup=open_item_func(position_id, remover, category_id)
             )
 
     count -= 1
@@ -3100,8 +3106,7 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
     if str(callback_query.from_user.id) in count:
         count = count[id_count]["count"]
     else:
-        count[str(callback_query.from_user.id)] = {
-            "count": "0", "count_menu": "0"}
+        count[str(callback_query.from_user.id)] = {"count": "0", "count_menu": "0"}
 
         with open("count.json", "w") as file:
             json.dump(count, file, indent=4, ensure_ascii=False)
@@ -3208,7 +3213,7 @@ async def process_callback_button1(callback_query: types.CallbackQuery):
 @dp.message_handler(text="📒 Расписание", state="*")
 async def gewt_chfdsdat_id3212(message: types.Message, state: FSMContext):
     salary_sales = """
-<b>График работы</b>с 10:00 до 22:00
+<b>График работы</b> с 10:00 до 22:00
 <b>Контактный телефон:</b> +7 (928) 017 20 22
 
 
@@ -3223,7 +3228,8 @@ async def gewt_chfdsdat_id3212(message: types.Message, state: FSMContext):
 @dp.message_handler(text="⬅️ На главную", state="*")
 async def gewt_chfdszdat_id3212(message: types.Message, state: FSMContext):
     await message.answer(
-        "Используйте кнопки управления", reply_markup=check_user_out_func(message.from_user.id)
+        "Используйте кнопки управления",
+        reply_markup=check_user_out_func(message.from_user.id),
     )
     await state.finish()
 
@@ -3259,8 +3265,7 @@ async def sget_chdat_id3212(message: types.Message, state: FSMContext):
                     balance_coupons = data[i]["price"]
 
                     update_userx(
-                        message.chat.id, balance=int(
-                            get_user[4]) + balance_coupons
+                        message.chat.id, balance=int(get_user[4]) + balance_coupons
                     )
 
         else:
@@ -3312,11 +3317,7 @@ async def sgewt_chfdsdat_id3212(message: types.Message, state: FSMContext):
         // 100
         * 5
     )
-    salary_sales = f"""
-    <b>Благотворительный фонд Ахмат Кадырова</b>\n\tС каждой покупки 5% с суммы покупки идет на благотворительность\n\tСобрано денег в этом месяце: <b> {blagotvoritelnost} руб.</b>\n\n\nИнформация об фонде:\nАдрес: Чеченская Республика, г. Грозный, ул. 8-я Линия 10, 364017\n
-График работы: с 14:00 до 18:00\n
-Телефон: 8 (967) 948-16-14
-"""
+    salary_sales = f"С каждой покупки 5% с суммы покупки идет на благотворительность\n\tСобрано денег в этом месяце: <b> {blagotvoritelnost} руб.</b>\n<b>Благотворительный фонд Ахмат Кадырова</b>\n\t\n\n\nИнформация об фонде:\nАдрес: Чеченская Республика, г. Грозный, ул. 8-я Линия 10, 364017\nГрафик работы: с 14:00 до 18:00\nТелефон: 8 (967) 948-16-14"
 
     await bot.send_photo(
         message.from_user.id,

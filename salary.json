@@ -8,11 +8,11 @@
         "sales": 2
     },
     "laughingRoom": {
-        "salary": 250,
-        "sales": 2
+        "salary": 350,
+        "sales": 3
     },
     "carousel": {
-        "salary": 150,
-        "sales": 1
+        "salary": 300,
+        "sales": 2
     }
 }

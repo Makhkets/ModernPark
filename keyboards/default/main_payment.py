@@ -7,7 +7,7 @@ from utils.db_api.sqlite import get_paymentx
 def payment_default():
     payment = get_paymentx()
     payment_kb = ReplyKeyboardMarkup(resize_keyboard=True)
-    payment_kb.row("🥝 Изменить QIWI 🖍", "🥝 Проверить QIWI ♻", "🥝 Баланс QIWI 👁")
+    payment_kb.row("💵 Изменить QIWI 🖍", "💵 Проверить QIWI ♻", "💵 Баланс QIWI 👁")
     if payment[5] == "True":
         payment_kb.row("🔴 Выключить пополнения")
     else:

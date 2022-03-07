@@ -119,7 +119,7 @@ def get_about_bot():
         f"💰 Продано товаров на: <code>{show_profit_all}руб</code>\n"
         f"📕 Пополнений за 24 часа: <code>{show_buy_day}руб</code>\n"
         f"💳 Средств в системе: <code>{show_money_in_bot}руб</code>\n"
-        f"🥝 Пополнено: <code>{show_refill}руб</code>\n"
+        f"💵 Пополнено: <code>{show_refill}руб</code>\n"
         f"\n"
         f"<b>🔶 Прочее 🔶</b>\n"
         f"🎁 Товаров: <code>{len(show_items)}</code>\n"

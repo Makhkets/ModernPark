@@ -30,7 +30,7 @@ async def on_startup(dp):
 
 
 if __name__ == "__main__":
-    create_bdx()
+    # create_bdx()
     update_profit()
 
     executor.start_polling(dp, on_startup=on_startup)

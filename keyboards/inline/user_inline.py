@@ -5,15 +5,15 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 # Кнопки при поиске профиля через админ-меню
 open_profile_inl = InlineKeyboardMarkup()
 mybuy_kb = InlineKeyboardButton(text="🛒 Мои покупки", callback_data="my_buy")
-chat_link_bk = InlineKeyboardButton(
-    text="👥 Чат", url="https://t.me/+o_lzftmG2PRhNzUy")
+mybuy_bkb = InlineKeyboardButton(text="💳 Бонусная карта", callback_data="bonus_card")
+chat_link_bk = InlineKeyboardButton(text="👥 Чат", url="https://t.me/+o_lzftmG2PRhNzUy")
 # open_profile_inl.add(input_kb, mybuy_kb, input_kb1)
 open_profile_inl.row(mybuy_kb, chat_link_bk)
+open_profile_inl.row(mybuy_bkb)
 
 # Кнопка с возвратом к профилю
 to_profile_inl = InlineKeyboardMarkup()
-to_profile_inl.row(InlineKeyboardButton(
-    text="📱 Профиль", callback_data="user_profile"))
+to_profile_inl.row(InlineKeyboardButton(text="📱 Профиль", callback_data="user_profile"))
 
 
 def next_back_inl(uri):
@@ -40,8 +40,7 @@ activnost_kb = InlineKeyboardMarkup().row(activnost)
 
 menu_category = InlineKeyboardMarkup()
 # _1 = InlineKeyboardButton('🎫 Билеты', callback_data='ticket_menu')
-_2 = InlineKeyboardButton("🍔 Бургеры, пиццы, стейки",
-                          callback_data="burger_menu")
+_2 = InlineKeyboardButton("🍔 Бургеры, пиццы, стейки", callback_data="burger_menu")
 _3 = InlineKeyboardButton("📙 Национальная кухня", callback_data="pizza_menu")
 _4 = InlineKeyboardButton(
     "🍣 Суши и роллы, блюдо из морепродуктов", callback_data="sushi_menu"
@@ -61,8 +60,7 @@ menu_category.row(_6)
 
 
 menu_category_ = InlineKeyboardMarkup()
-__2 = InlineKeyboardButton(
-    "🌐 Наш сайт", url="https://appreal.org/chechnya-15-object/")
+__2 = InlineKeyboardButton("🌐 Наш сайт", url="https://appreal.org/chechnya-15-object/")
 __3 = InlineKeyboardButton(
     "📱 instagram", url="https://www.instagram.com/park.kadyrova/"
 )

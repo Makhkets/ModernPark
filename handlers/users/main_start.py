@@ -1,8 +1,15 @@
 # - *- coding: utf- 8 - *-
 
+from ast import arg
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import CommandStart
+
+from aiogram.utils.deep_linking import get_start_link
+from aiogram.utils.deep_linking import decode_payload
+
+from data import config
+from keyboards import *
 
 from filters import IsWork, IsUser
 from filters.all_filters import IsBuy
@@ -11,6 +18,10 @@ from loader import dp, bot
 from states import StorageUsers
 from utils.db_api.sqlite import *
 from utils.other_func import clear_firstname, get_dates
+
+import random
+import string
+import qrcode
 
 
 prohibit_buy = [
@@ -38,11 +49,75 @@ async def send_work_message(message: types.Message, state: FSMContext):
         await message.answer("<b>🔴 Бот находится на технических работах.</b>")
 
 
+def create_qrcode(url, name):
+    qr = qrcode.make(data=url)
+    qr.save(stream=f"qrcode/{name}.png")
+
+    print("[+] QR-CODE was created")
+
+
+def generate_random_string(length):
+    letters = string.ascii_lowercase
+    rand_string = ''.join(random.choice(letters) for i in range(length))
+    return rand_string
+
 # Обработка кнопки "На главную" и команды "/start"
+
+
 @dp.message_handler(text="⬅ На главную", state="*")
 @dp.message_handler(CommandStart(), state="*")
 async def bot_start(message: types.Message, state: FSMContext):
+    from loguru import logger
     await state.finish()
+    x = generate_random_string(10)
+    args = message.get_args()
+    with sqlite3.connect(path_to_db) as db:
+        users_info = db.execute(
+            f"SELECT * FROM storage_users WHERE user_id = {message.from_user.id}").fetchall()
+
+        qrcode_list = db.execute(
+            f"SELECT qr_code FROM storage_users").fetchall()
+
+    qrcode = []
+    for i in qrcode_list:
+        qrcode.append(i[0])
+
+    if str(args) in qrcode:
+        if str(message.from_user.id) in config.admins:
+            logger.success("Вы админ")
+
+            with sqlite3.connect(path_to_db) as db:
+                get_user_data = db.execute(
+                    f"SELECT user_login FROM storage_users WHERE qr_code = '{str(args)}'").fetchone()
+
+            get_user_data = get_user_data[0]
+            logger.success(get_user_data)
+            get_user_id = get_userx(user_login=get_user_data.lower())
+            if get_user_id is not None:
+                await bot.send_photo(
+                    message.from_user.id,
+                    open(f"qrcode/{args}.png", "rb"),
+                    caption=search_user_profile(get_user_id[1]),
+                    reply_markup=search_profile_func(get_user_id[1]),
+                )
+
+                await state.finish()
+            else:
+                await message.answer("<b>❌ Профиль не был найден</b>\n"
+                                     "📱 Введите логин или айди пользователя. Пример:\n")
+
+            # вывод баланса карты бонуса
+        if not(str(message.from_user.id) in config.admins):
+            await bot.send_photo(
+                message.from_user.id,
+                open(f"qrcode/{args}.png", "rb"),
+                caption=get_user_qrcode_profile(message.from_user.id),
+                reply_markup=open_profile_inl,
+            )
+
+    if int(len(users_info)) == 0:
+        create_qrcode(f"https://t.me/ModernPark_bot?start={x}", x)
+
     first_name = clear_firstname(message.from_user.first_name)
     get_user_id = get_userx(user_id=message.from_user.id)
     if get_user_id is None:
@@ -56,6 +131,7 @@ async def bot_start(message: types.Message, state: FSMContext):
                     0,
                     0,
                     get_dates(),
+                    x,
                 )
             else:
                 delete_userx(user_login=message.from_user.username)
@@ -66,6 +142,7 @@ async def bot_start(message: types.Message, state: FSMContext):
                     0,
                     0,
                     get_dates(),
+                    x,
                 )
         else:
             add_userx(
@@ -75,6 +152,7 @@ async def bot_start(message: types.Message, state: FSMContext):
                 0,
                 0,
                 get_dates(),
+                x,
             )
     else:
         if first_name != get_user_id[3]:

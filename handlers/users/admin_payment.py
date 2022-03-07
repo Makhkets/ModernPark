@@ -68,7 +68,7 @@ async def input_amount(call: CallbackQuery):
         change_pass = True
     if change_pass:
         update_paymentx(way_payment=way_pay)
-        await bot.edit_message_text("🥝 Выберите способ пополнения 💵\n"
+        await bot.edit_message_text("💵 Выберите способ пополнения 💵\n"
                                     "\n"
                                     "🔸 <a href='https://vk.cc/bYjKGM'><b>По форме</b></a> - <code>Готовая форма оплаты QIWI</code>\n"
                                     "🔸 <a href='https://vk.cc/bYjKEy'><b>По номеру</b></a> - <code>Перевод средств по номеру телефона</code>\n"
@@ -82,15 +82,15 @@ async def input_amount(call: CallbackQuery):
 ###################################################################################
 ####################################### QIWI ######################################
 # Изменение QIWI кошелька
-@dp.message_handler(IsAdmin(), text="🥝 Изменить QIWI 🖍", state="*")
+@dp.message_handler(IsAdmin(), text="💵 Изменить QIWI 🖍", state="*")
 async def change_qiwi_login(message: types.Message, state: FSMContext):
     await state.finish()
-    await message.answer("<b>🥝 Введите</b> <code>логин(номер)</code> <b>QIWI кошелька🖍 </b>")
+    await message.answer("<b>💵 Введите</b> <code>логин(номер)</code> <b>QIWI кошелька🖍 </b>")
     await StorageQiwi.here_input_qiwi_login.set()
 
 
 # Проверка работоспособности QIWI
-@dp.message_handler(IsAdmin(), text="🥝 Проверить QIWI ♻", state="*")
+@dp.message_handler(IsAdmin(), text="💵 Проверить QIWI ♻", state="*")
 async def check_qiwi(message: types.Message, state: FSMContext):
     await state.finish()
     get_payments = get_paymentx()
@@ -112,20 +112,20 @@ async def check_qiwi(message: types.Message, state: FSMContext):
         except json.decoder.JSONDecodeError:
             check_pass = False
         if check_pass:
-            await message.answer(f"<b>🥝 QIWI кошелёк полностью функционирует ✅</b>\n"
+            await message.answer(f"<b>💵 QIWI кошелёк полностью функционирует ✅</b>\n"
                                  f"👤 Логин: <code>{get_payments[0]}</code>\n"
                                  f"♻ Токен: <code>{get_payments[1]}</code>\n"
                                  f"📍 Приватный ключ: <code>{get_payments[2]}</code>")
         else:
-            await message.answer("<b>🥝 QIWI кошелёк не прошёл проверку ❌</b>\n"
+            await message.answer("<b>💵 QIWI кошелёк не прошёл проверку ❌</b>\n"
                                  "❗ Как можно быстрее его замените ❗")
     else:
-        await message.answer("<b>🥝 QIWI кошелёк отсутствует ❌</b>\n"
+        await message.answer("<b>💵 QIWI кошелёк отсутствует ❌</b>\n"
                              "❗ Как можно быстрее его установите ❗")
 
 
 # Обработка кнопки "Баланс Qiwi"
-@dp.message_handler(IsAdmin(), text="🥝 Баланс QIWI 👁", state="*")
+@dp.message_handler(IsAdmin(), text="💵 Баланс QIWI 👁", state="*")
 async def balance_qiwi(message: types.Message, state: FSMContext):
     await state.finish()
     get_payments = get_paymentx()
@@ -136,12 +136,12 @@ async def balance_qiwi(message: types.Message, state: FSMContext):
         if response_qiwi.status_code == 200:
             get_balance = response_qiwi.json()["accounts"][0]["balance"]["amount"]
             await message.answer(
-                f"<b>🥝 Баланс QIWI кошелька</b> <code>{get_payments[0]}</code> <b>составляет:</b> <code>{get_balance} руб</code>")
+                f"<b>💵 Баланс QIWI кошелька</b> <code>{get_payments[0]}</code> <b>составляет:</b> <code>{get_balance} руб</code>")
         else:
-            await message.answer("<b>🥝 QIWI кошелёк не работает ❌</b>\n"
+            await message.answer("<b>💵 QIWI кошелёк не работает ❌</b>\n"
                                  "❗ Как можно быстрее его замените ❗")
     else:
-        await message.answer("<b>🥝 QIWI кошелёк отсутствует ❌</b>\n"
+        await message.answer("<b>💵 QIWI кошелёк отсутствует ❌</b>\n"
                              "❗ Как можно быстрее его установите ❗")
 
 
@@ -150,7 +150,7 @@ async def balance_qiwi(message: types.Message, state: FSMContext):
 async def change_key_api(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["here_input_qiwi_login"] = message.text
-    await message.answer("<b>🥝 Введите</b> <code>токен API</code> <b>QIWI кошелька 🖍</b>\n"
+    await message.answer("<b>💵 Введите</b> <code>токен API</code> <b>QIWI кошелька 🖍</b>\n"
                          "❕ Получить можно тут 👉 <a href='https://qiwi.com/api'><b>Нажми на меня</b></a>\n"
                          "❕ При получении токена, ставьте только первые 3 галочки.",
                          disable_web_page_preview=True)
@@ -162,7 +162,7 @@ async def change_key_api(message: types.Message, state: FSMContext):
 async def change_secret_api(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data["here_input_qiwi_token"] = message.text
-    await message.answer("<b>🥝 Введите</b> <code>Секретный ключ 🖍</code>\n"
+    await message.answer("<b>💵 Введите</b> <code>Секретный ключ 🖍</code>\n"
                          "❕ Получить можно тут 👉 <a href='https://qiwi.com/p2p-admin/transfers/api'><b>Нажми на меня</b></a>",
                          disable_web_page_preview=True)
     await StorageQiwi.here_input_qiwi_secret.set()
@@ -176,7 +176,7 @@ async def change_secret_api(message: types.Message, state: FSMContext):
         qiwi_login = data["here_input_qiwi_login"]
         qiwi_token = data["here_input_qiwi_token"]
     qiwi_private_key = message.text
-    delete_msg = await message.answer("<b>🥝 Проверка введённых QIWI данных... 🔄</b>")
+    delete_msg = await message.answer("<b>💵 Проверка введённых QIWI данных... 🔄</b>")
     await asyncio.sleep(0.5)
     try:
         qiwi = QiwiP2P(qiwi_private_key)
@@ -194,21 +194,21 @@ async def change_secret_api(message: types.Message, state: FSMContext):
                     update_paymentx(qiwi_login=qiwi_login, qiwi_token=qiwi_token,
                                     qiwi_private_key=qiwi_private_key)
                     await delete_msg.delete()
-                    await message.answer("<b>🥝 QIWI токен был успешно изменён ✅</b>",
+                    await message.answer("<b>💵 QIWI токен был успешно изменён ✅</b>",
                                          reply_markup=payment_default())
                 elif check_history.status_code == 400 or check_profile.status_code == 400 or check_balance.status_code == 400:
                     await delete_msg.delete()
-                    await message.answer(f"<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+                    await message.answer(f"<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                          f"<code>▶ Код ошибки: Номер телефона указан в неверном формате</code>",
                                          reply_markup=payment_default())
                 elif check_history.status_code == 401 or check_profile.status_code == 401 or check_balance.status_code == 401:
                     await delete_msg.delete()
-                    await message.answer(f"<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+                    await message.answer(f"<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                          f"<code>▶ Код ошибки: Неверный токен или истек срок действия токена API</code>",
                                          reply_markup=payment_default())
                 elif check_history.status_code == 403 or check_profile.status_code == 403 or check_balance.status_code == 403:
                     await delete_msg.delete()
-                    await message.answer(f"<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+                    await message.answer(f"<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                          f"<code>▶ Ошибка: Нет прав на данный запрос (недостаточно разрешений у токена API)</code>",
                                          reply_markup=payment_default())
                 else:
@@ -219,22 +219,22 @@ async def change_secret_api(message: types.Message, state: FSMContext):
                     elif check_balance.status_code != 200:
                         status_coude = check_balance.status_code
                     await delete_msg.delete()
-                    await message.answer(f"<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+                    await message.answer(f"<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                          f"<code>▶ Код ошибки: {status_coude}</code>",
                                          reply_markup=payment_default())
             except json.decoder.JSONDecodeError:
                 await delete_msg.delete()
-                await message.answer("<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+                await message.answer("<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                      "<code>▶ Токен не был найден</code>",
                                      reply_markup=payment_default())
         except IndexError:
             await delete_msg.delete()
-            await message.answer("<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+            await message.answer("<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                  "<code>▶ IndexError</code>",
                                  reply_markup=payment_default())
         except UnicodeEncodeError:
             await delete_msg.delete()
-            await message.answer("<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+            await message.answer("<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                                  "<code>▶ Токен не был найден</code>",
                                  reply_markup=payment_default())
     except json.decoder.JSONDecodeError:
@@ -247,7 +247,7 @@ async def change_secret_api(message: types.Message, state: FSMContext):
         secrey_key_error = True
     if secrey_key_error:
         await delete_msg.delete()
-        await message.answer("<b>🥝 Введённые QIWI данные не прошли проверку ❌</b>\n"
+        await message.answer("<b>💵 Введённые QIWI данные не прошли проверку ❌</b>\n"
                              "<code>▶ Неверный приватный ключ</code>\n"
                              "<u>❗ Указывайте СЕКРЕТНЫЙ КЛЮЧ, а не публичный</u>\n"
                              "❕ Секретный ключ заканчивается на =",
