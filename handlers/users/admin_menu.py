@@ -328,7 +328,7 @@ async def get_chat_id312(message: types.Message, state: FSMContext):
 @dp.message_handler(IsAdmin(), text="📕 Очистить посещения", state="*")
 async def get_chat_id312(message: types.Message, state: FSMContext):
     await message.answer("✅ Готово")
-    data = ["Посещение были очищены администратором"]
+    data = [""]
     with open("booking_park.json", "w", encoding="utf-8") as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
 

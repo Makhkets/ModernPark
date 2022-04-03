@@ -4,8 +4,13 @@
         "count_menu_ticket": "0"
     },
     "400505382": {
-        "count": "1",
-        "count_menu": "0"
+        "count": "0",
+        "count_menu_ticket": "0",
+        "count_menu_burger": "0",
+        "count_menu_pizza": "0",
+        "count_menu_sushi": "0",
+        "count_menu_napitki": "1",
+        "count_tickets_menu_st": "0"
     },
     "2024579148": {
         "count": "5",
@@ -23,5 +28,9 @@
         "count_menu_sushi": "0",
         "count_menu_napitki": "0",
         "count_tickets_menu_st": "0"
+    },
+    "5285375327": {
+        "count": "2",
+        "count_menu": "0"
     }
 }

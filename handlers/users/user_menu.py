@@ -1,6 +1,9 @@
 # - *- coding: utf- 8 - *-
+from ast import Pass
+from importlib.resources import path
 from logging import log
 from os import remove
+from subprocess import call
 from aiogram.dispatcher.filters import state
 from aiogram.types import ContentType, File, Message, callback_query, reply_keyboard
 from pathlib import Path
@@ -12,7 +15,6 @@ from aiogram.types.base import Integer
 from requests.api import get
 import data
 from keyboards import inline
-
 from itertools import groupby
 from keyboards.default import check_user_out_func, all_back_to_main_default
 from keyboards.inline import *
@@ -34,6 +36,8 @@ from keyboards import *
 from keyboards import *
 from loguru import logger
 from pprint import pprint
+from data import config as configWithA
+import asyncio
 
 config = configparser.ConfigParser()
 config.read("settings.ini")
@@ -1547,6 +1551,124 @@ async def callbackone(callback_query: types.CallbackQuery):
     await bot.send_message(user_id, "Действие выполнено")
 
 
+# podverdits
+@dp.callback_query_handler(lambda c: c.data == "podverdits", state="*")
+async def callbackone(callback_query: types.CallbackQuery, state: FSMContext):
+
+    with sqlite3.connect("data/botBD.sqlite") as db:
+        user = db.execute("SELECT * FROM storage_users WHERE user_id = ?", (str(callback_query.from_user.id),)).fetchone()
+        
+        balance = int(user[4])
+        if balance >= configWithA.price_reklama:
+            db.execute("UPDATE storage_users SET balance = ? WHERE user_id = ?", (balance - configWithA.price_reklama, callback_query.from_user.id),)
+            await callback_query.message.answer("✅ Покупка совершена успешно")
+            await callback_query.message.answer("<b>Введите описание вашей рекламы</b>")
+            await StorageUsers.sell_reklama1.set()
+        else:
+            await callback_query.message.answer("Для оплаты ваш баланс должен состовлять не меньше 300р")
+    
+
+
+async def send_message_to_user(message, user_id, url, choice):
+    receive_users, block_users = 0, 0
+    users = get_all_usersx()
+    for user in users:
+        try:
+            if choice == 1:
+                await bot.send_photo(
+                    user[1],
+                    url,
+                    caption="message",
+                    reply_markup=check_user_out_func,
+                )
+            else:
+                await bot.send_message(user[1], message)
+            receive_users += 1
+        except:
+            block_users += 1
+        await asyncio.sleep(0.05)
+    await bot.send_message(
+        user_id,
+        f"<b>📢 Рассылка была завершена ☑</b>\n"
+        f"👤 Пользователей получили сообщение: <code>{receive_users} ✅</code>\n"
+        f"👤 Пользователей не получили сообщение: <code>{block_users} ❌</code>",
+    )
+
+@dp.message_handler(state=StorageUsers.sell_reklama1)
+async def input_buy_count_item(message: types.Message, state: FSMContext):
+    global description_reklama
+    description_reklama = message.text
+    await message.answer("Введите ссылку на картинку продукта, если нет картинки то напишите слово: нет (учитывая регистр букв)")
+    await StorageUsers.sell_reklama2.set()
+
+
+@dp.message_handler(state=StorageUsers.sell_reklama2)
+async def input_buy_count_item(message: types.Message, state: FSMContext):
+    
+    url = message.text
+    #
+    if url == "нет":
+        await message.answer(f"<b>📢 Рассылка началась...</b>")
+        send_ad_message = description_reklama
+        await state.finish()
+        receive_users, block_users = 0, 0
+        users = get_all_usersx()
+        for user in users:
+            try:
+                await bot.send_message(user[1], send_ad_message)
+                receive_users += 1
+            except:
+                block_users += 1
+            await asyncio.sleep(0.05)
+        await bot.send_message(
+            message.from_user.id,
+            f"<b>📢 Рассылка была завершена ☑</b>\n"
+            f"👤 Пользователей получили сообщение: <code>{receive_users} ✅</code>\n"
+            f"👤 Пользователей не получили сообщение: <code>{block_users} ❌</code>",
+        )
+
+
+
+    
+    else:
+        await message.answer(f"<b>📢 Рассылка началась...</b>")
+        send_ad_message = description_reklama
+        await state.finish()
+        receive_users, block_users = 0, 0
+        users = get_all_usersx()
+        for user in users:
+            try:
+                link = requests.get(url).content
+                logger.critical(user[1])
+                await bot.send_photo(
+                    photo=link,
+                    chat_id=user[1],
+                    caption=send_ad_message
+                )
+                receive_users += 1
+            except Exception as ex:
+                logger.error(ex)
+                block_users += 1
+            await asyncio.sleep(0.05)
+        await bot.send_message(
+            message.from_user.id,
+            f"<b>📢 Рассылка была завершена ☑</b>\n"
+            f"👤 Пользователей получили сообщение: <code>{receive_users} ✅</code>\n"
+            f"👤 Пользователей не получили сообщение: <code>{block_users} ❌</code>",
+        )
+
+# otkazat
+
+@dp.callback_query_handler(lambda c: c.data == "otkazat")
+async def callbackone(callback_query: types.CallbackQuery):
+    await callback_query.message.delete()
+    await callback_query.message.answer("Покупка отменена", reply_markup=check_user_out_func(callback_query.message.from_user.id))
+
+@dp.callback_query_handler(lambda c: c.data == "reklama_oplata")
+async def callbackone(callback_query: types.CallbackQuery):
+    await callback_query.message.delete()
+    await callback_query.message.answer("Подтвердите оплату рекламы", reply_markup=podverjdenie)
+
 @dp.callback_query_handler(lambda c: c.data == "one6")
 async def callbackone(callback_query: types.CallbackQuery):
     from loguru import logger
@@ -2489,6 +2611,12 @@ async def show_search(message: types.Message, state: FSMContext):
     await message.answer("<b>Теперь введите ваше имя</b>")
     await StorageUsers.bronirovanie2.set()
 
+@dp.message_handler(text="🏞 Парк", state="*")
+async def index(message: types.Message, state=FSMContext):
+    await message.answer("Открыта вкладка: <b>Парк</b>", reply_markup=kb_park)
+
+@dp.message_handler(text="")
+
 
 @dp.message_handler(state=StorageUsers.bronirovanie2)
 async def show_search(message: types.Message, state: FSMContext):
@@ -2591,9 +2719,7 @@ async def show_search(message: types.Message, state: FSMContext):
 @dp.message_handler(text="📋 Запланировать посещение", state="*")
 async def show_s1earcsh(message: types.Message, state: FSMContext):
     # booking_park.json
-    await message.answer(
-        "Заполните форму ниже:\n✍ Напишите:\n1️⃣ Дата\n2️⃣ Время\n3️⃣ Ф.И.О.\n4️⃣ Количество человек\n5️⃣ Номер телефона"
-    )
+    await message.answer("Заполните форму ниже:\n✍ Напишите:\n1️⃣ Дата\n2️⃣ Время\n3️⃣ Ф.И.О.\n4️⃣ Количество человек\n5️⃣ Номер телефона")
     await StorageQiwi.booking_prk.set()
     # 📔 Активности парка
 
@@ -2606,14 +2732,14 @@ async def schow_s1earcsh(message: types.Message, state: FSMContext):
 
     if "Нет людей которые посетят парк" in data_parse:
         data_parse.remove("Нет людей которые посетят парк")
-        data_parse.append(message.text)
+        data_parse.append(message.text + "\n〰〰〰〰〰")
 
         with open("booking_park.json", "w", encoding="utf-8") as f:
             json.dump(data_parse, f, indent=4, ensure_ascii=False)
         await message.answer("<b>Вы успешно добавлены в список</b>")
 
     else:
-        data_parse.append(message.text)
+        data_parse.append(message.text + "\n〰〰〰〰〰")
         with open("booking_park.json", "w", encoding="utf-8") as f:
             json.dump(data_parse, f, indent=4, ensure_ascii=False)
         await message.answer("<b>Вы успешно добавлены в список</b>")
@@ -2621,9 +2747,28 @@ async def schow_s1earcsh(message: types.Message, state: FSMContext):
     await state.finish()
 
 
+#💼 Активности парка
+@dp.message_handler(text="💼 Активности парка", state="*")
+async def index(message: types.Message, state: FSMContext):
+    await message.answer("Вы перемещены в мею: <b>Активности парка</b>", reply_markup=active_park)
+
+@dp.message_handler(text="🛠 Управление парком", state="*")
+async def index(message: types.Message, state: FSMContext):
+    await message.answer("Вы перемещены в меню: <b>Управление парком</b>", reply_markup=kb_park_func)
+
+#🖥 Меню администратора
+@dp.message_handler(text="🖥 Меню администратора", state="*")
+async def index(message: types.Message, state: FSMContext):
+    await message.answer("Вы перемещены в меню: <b>Меню администратора</b>", reply_markup=admin_func_)
+
+# 💻 Реклама
+@dp.message_handler(text="💻 Реклама", state="*")
+async def index(message: types.Message, state: FSMContext):
+    await message.answer("<b>Автоматизированная реклама</b>\n<code>После оплаты рекламы, пользователям будет разослана реклама</code>\n\nЦена: 300 рублей\n", reply_markup=reklama)
+
+
+
 # 📃 Будущие посещения
-
-
 @dp.message_handler(text="📃 Бронирования", state="*")
 async def show_s1earcsh(message: types.Message, state: FSMContext):
     with open("booking_park.json", encoding="utf-8") as file:
@@ -2663,19 +2808,19 @@ async def process_name(message: types.Message, state: FSMContext):
     )
     await state.finish()
     if (
-        "1832575495:TEST:3867bc0eca33ad26a21b74ef80a572cd9f5dbd5805ce1613b810eb5ccd208bf4".split(
+        "1832575495:TEST:e6ea45d043687d2173ddfa5406b2eed2fa463366386fbadeeb2321867bbfbbd0".split(
             ":"
         )[
             1
         ]
         == "TEST"
     ):
-        await bot.send_message(message.chat.id, "pre_buy_demo_alert")
+
         await bot.send_invoice(
             message.chat.id,
             title="Пополнение",
             description="Пополнение баланса",
-            provider_token="1832575495:TEST:3867bc0eca33ad26a21b74ef80a572cd9f5dbd5805ce1613b810eb5ccd208bf4",
+            provider_token="1832575495:TEST:e6ea45d043687d2173ddfa5406b2eed2fa463366386fbadeeb2321867bbfbbd0",
             currency="rub",
             photo_url="",
             photo_height=0,  # !=0/None, иначе изображение не покажется

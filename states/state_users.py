@@ -18,3 +18,8 @@ class StorageUsers(StatesGroup):
 
     bronirovanie = State()
     bronirovanie2 = State()
+
+    sell_reklama1 = State()
+    sell_reklama2 = State()
+    sell_reklama3 = State()
+    sell_reklama4 = State()
