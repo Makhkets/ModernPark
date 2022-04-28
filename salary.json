@@ -1,15 +1,15 @@
 {
     "admin_cafe": {
-        "salary": 7075,
-        "sales": 19
+        "salary": 7615,
+        "sales": 21
     },
     "ferrisWheel": {
         "salary": 250,
         "sales": 2
     },
     "laughingRoom": {
-        "salary": 350,
-        "sales": 3
+        "salary": 450,
+        "sales": 4
     },
     "carousel": {
         "salary": 300,

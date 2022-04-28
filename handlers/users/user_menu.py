@@ -43,14 +43,11 @@ config = configparser.ConfigParser()
 config.read("settings.ini")
 admin_id = config["settings"]["admin_cafe"]
 
-# 382043304 - билеты
 
 
 def split_messages(get_list, count):
     return [get_list[i : i + count] for i in range(0, len(get_list), count)]
 
-
-######################################################################################################################
 
 
 @dp.callback_query_handler(text_startswith="napitki_menu", state="*")

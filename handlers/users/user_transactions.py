@@ -139,6 +139,7 @@ async def create_qiwi_pay(message: types.Message, state: FSMContext):
             or get_payments[2] != "None"
         ):
             try:
+                print(get_payments)
                 request = requests.Session()
                 request.headers["authorization"] = "Bearer " + get_payments[1]
                 response_qiwi = request.get(
