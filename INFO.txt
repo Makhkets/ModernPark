@@ -12,3 +12,5 @@
 --> handlers
 ----> users
 -------> admin_menu.py
+
+Сссылка на бота - t.me/modernnpark_bot
