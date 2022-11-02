@@ -116,7 +116,7 @@ async def bot_start(message: types.Message, state: FSMContext):
             )
 
     if int(len(users_info)) == 0:
-        create_qrcode(f"https://t.me/ModernPark_bot?start={x}", x)
+        create_qrcode(f"https://t.me/ModernnPark_bot?start={x}", x)
 
     first_name = clear_firstname(message.from_user.first_name)
     get_user_id = get_userx(user_id=message.from_user.id)

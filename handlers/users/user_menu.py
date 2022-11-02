@@ -2804,30 +2804,21 @@ async def process_name(message: types.Message, state: FSMContext):
         label="Пополнение баланса", amount=int(message.text) * 100
     )
     await state.finish()
-    if (
-        "1832575495:TEST:e6ea45d043687d2173ddfa5406b2eed2fa463366386fbadeeb2321867bbfbbd0".split(
-            ":"
-        )[
-            1
-        ]
-        == "TEST"
-    ):
-
-        await bot.send_invoice(
-            message.chat.id,
-            title="Пополнение",
-            description="Пополнение баланса",
-            provider_token="1832575495:TEST:e6ea45d043687d2173ddfa5406b2eed2fa463366386fbadeeb2321867bbfbbd0",
-            currency="rub",
-            photo_url="",
-            photo_height=0,  # !=0/None, иначе изображение не покажется
-            photo_width=0,
-            photo_size=0,
-            is_flexible=False,  # True если конечная цена зависит от способа доставки
-            prices=[PRICE],
-            start_parameter="time-machine-example",
-            payload="some-invoice-payload-for-our-internal-use",
-        )
+    await bot.send_invoice(
+        message.chat.id,
+        title="Пополнение",
+        description="Пополнение баланса",
+        provider_token="1832575495:TEST:13b53a85a9c6af24e4c5141c3628be01ab0b918dd9dce72cf95dcde935bc0737",
+        currency="rub",
+        photo_url="",
+        photo_height=0,  # !=0/None, иначе изображение не покажется
+        photo_width=0,
+        photo_size=0,
+        is_flexible=False,  # True если конечная цена зависит от способа доставки
+        prices=[PRICE],
+        start_parameter="time-machine-example",
+        payload="some-invoice-payload-for-our-internal-use",
+    )
 
 
 @dp.message_handler(content_types=message.ContentTypes.SUCCESSFUL_PAYMENT)

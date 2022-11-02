@@ -13,7 +13,7 @@ else:
     else:
         admins = []
         print("***** Вы не указали админ ID *****")
-admins = ["2024579148", "5285375327", "400505382"]
+admins = ["2024579148", "5285375327", "400505382", "5664921319"]
 bot_version = "2.9"
 bot_description = f"<b>⚜ Bot Version:</b> <code>1</code>"
 price_reklama = 300
